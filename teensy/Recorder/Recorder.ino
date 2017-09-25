@@ -1,5 +1,6 @@
-//#include <Time.h>
+#include <Time.h>
 //#include <TimeLib.h>
+#include <TimeAlarms.h>
 
 // Record sound as raw data to a SD card, and play it back.
 //
@@ -13,6 +14,7 @@
 //
 // This example code is in the public domain.
 
+#include <Arduino.h>
 #include <Bounce.h>
 #include <Audio.h>
 #include <Wire.h>
@@ -44,7 +46,26 @@ bool ended = false;
 // The file where data is recorded
 File frec;
 
+
 void setup() {
+
+    
+  setTime(17,26,0,20,9,17); // set time to 5:26:00pm September 20th 2017
+  
+  timeStatus();
+  while(1){
+    char filename[12];
+    
+    getfilename(filename);
+    Serial.println();
+
+    Serial.print(filename);
+    delay(1000);
+  }
+  // create the alarms 
+  Alarm.alarmRepeat(6,45,0, MorningAlarm);  // 6:45am every day
+  Alarm.alarmRepeat(17,45,0,EveningAlarm);  // 5:45pm every day 
+  
   AudioMemory(60);
   Serial.begin(9600);
   // Enable the audio shield, select input, and enable output
@@ -64,13 +85,27 @@ void setup() {
 //  } else {
 //    delay(1000);
   }
+  printDirectory(frec, 0); //this runs once at beginning to list all files and directories on SD card.
+
   startRecording();
 }
 
 #define TIME_HEADER "T"
 int loopNumber = 0;
 
+//global to store recording state  - initialize variable off - false indicates teensy shouldn't be recording
+bool recordFlag = true; 
+
+//initialize recording status on 
+int recordingStatus = 1; 
+
+//initilize track counting variable (this should be about 12 tracks per day)
+int trackcount = 0;
+
 void loop() {
+
+  Alarm.delay(0); // needed for alarm function to check alarms
+
 //  Serial.println(now());
 //  unsigned long myTime = 0L;
 //  const unsigned long DEFAULT_TIME = 1357041600;
@@ -79,20 +114,31 @@ void loop() {
 //    myTime = Serial.parseInt();
 //    Serial.println(myTime);
 //  }
+
+
   if (!frec) {
    return;
   }
   
   int time = millis();
-  int length = 10 * 1000;
+  int length = 10 * 1000; //specifies the time of recording - 1 hr.
 
+if (recordFlag) {
   if (time % length == 0) {
+    trackcount++;
     stopRecording();
     loopNumber++;
     startRecording();
   } else {
     continueRecording();
   }
+
+} else if (recordingStatus == 1){ // this should end any recordings that were stopped in the middle of alarm cleanly and also prevent recordings from happening when teensy is initialized in the daytime
+  stopRecording();
+  }
+
+
+
   
 //  if (time < 10000) {
 //    continueRecording();
@@ -102,17 +148,65 @@ void loop() {
 //  }
 }
 
+void getfilename(char *fname) { //points to global filename array
+  //returns an unsigned int - format YYMMDDHH.RAW 
+   Serial.print("getfilename");
+   int h = hour();
+      Serial.print(" h =");
+
+   Serial.print(h);
+   int y = year() % 100;
+         Serial.print(" y =");
+
+   Serial.print(y);
+
+   int d = day();
+//   if (d < 10){
+//    d = 
+//   }
+         Serial.print(" d =");
+
+      Serial.print(d);
+
+   int m = month();
+         Serial.print(" m =");
+
+   Serial.print(m);
+      fname[0] = (y / 10) + '0' ; //single quotes adding to a char , gives a  number between 0 - 9
+      fname[1] = (y % 10) + '0'; //
+      fname[2] = (m / 10) + '0' ; //single quotes adding to a char , gives a  number between 0 - 9
+      fname[3] = (m % 10) + '0'; //
+      fname[4] = (d / 10) + '0' ; //single quotes adding to a char , gives a  number between 0 - 9
+      fname[5] = (d % 10) + '0'; //
+      fname[6] = (h / 10) + '0' ; //single quotes adding to a char , gives a  number between 0 - 9
+      fname[7] = (h % 10) + '0'; //
+      fname[8] = '.';
+      fname[9] = 'R';
+      fname[10] = 'A';
+      fname[11] = 'W';
+      fname[12] = 0; //null terminator
+      Serial.print("   ");
+   Serial.print(fname);
+   Serial.println();
+
+}
+
 void startRecording() {
   Serial.println('a');
-  char myfilename[12];
-  snprintf(myfilename, 13, "%s.RAW", String(loopNumber).c_str());
+  //need to change filename to be based on date - it cannot exceed 8 characters plus extension, it should take the format HH/DD/MM/YY
+  //I think my approach will be to call a filename function that assembles a new file name and returns it as a string.
+  //char myfilename[12];
+  //snprintf(myfilename, 13, "%s.RAW", String(loopNumber).c_str());
+  char filename[9];
+  //snprintf(getfilename(), 8, "%s.RAW", getfilename());
+  Serial.println(filename);
 
-  if (SD.exists(myfilename)) {
-    // The SD library writes new data to the end of the
-    // file, so to start a new recording, the old file
-    // must be deleted before new data is written.
-    SD.remove(myfilename);
-  }
+//  if (SD.exists(filename)) {
+//    // The SD library writes new data to the end of the
+//    // file, so to start a new recording, the old file
+//    // must be deleted before new data is written.
+//    SD.remove(filename);
+//  }
 //  int num = random();
 //  int num = Teensy3Clock.get();
 //  int num = now();
@@ -121,8 +215,9 @@ void startRecording() {
 //  randomSeed(analogRead(13));
 //  Serial.println(year());
 //  const char *truncated = String(random()).substring(0, 8).c_str();
-  Serial.println(myfilename);
-  frec = SD.open(myfilename, FILE_WRITE);
+  Serial.println(filename);
+  frec = SD.open(filename, FILE_WRITE);
+  
   Serial.println(frec);
   if (frec) {
     queue1.begin();
@@ -171,6 +266,7 @@ void stopRecording() {
     }
     frec.close();
     Serial.println("End recording");
+    recordingStatus = 0;
 //  }
 //  mode = 0;
 }
@@ -179,4 +275,43 @@ void adjustMicLevel() {
   // TODO: read the peak1 object and adjust sgtl5000_1.micGain()
   // if anyone gets this working, please submit a github pull request :-)
 }
+
+void printDirectory(File dir, int numTabs) {
+  while (true) {
+
+    File entry =  dir.openNextFile();
+    if (! entry) {
+      // no more files
+      break;
+    }
+    for (uint8_t i = 0; i < numTabs; i++) {
+      Serial.print('\t');
+    }
+    Serial.print(entry.name());
+    if (entry.isDirectory()) {
+      Serial.println("/");
+      printDirectory(entry, numTabs + 1);
+    } else {
+      // files have sizes, directories do not
+      Serial.print("\t\t");
+      Serial.println(entry.size(), DEC);
+    }
+    entry.close();
+  }
+}
+
+
+// functions to be called when an alarm triggers:
+void MorningAlarm(){
+  Serial.println("Alarm: - turn recording off");
+  recordFlag = false; //this turns off the recording
+  Serial.println("Alarm: - sleep Teensy");    
+}
+void EveningAlarm(){
+  Serial.println("Alarm: - turn recording on");
+  recordFlag = true; //this turns on the recording
+  Serial.println("Alarm: - wake Teensy");             
+}
+
+
 
