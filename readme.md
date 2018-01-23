@@ -5,12 +5,16 @@ Made for/with the [PNCA Sensing the Environment Project](http://pnca.edu/makethi
 This is a sound recording and reporting kit. Right now, sound is recorded to an onboard SD card. 
 Stage 1 will send this info over Wifi to a Python server on a host computer.
 
+## objectives
+- record bird songs at night for as long as possible (1-2weeks)
+- transmit bird songs to cloud server after recording is finished (during the day)
+- connect to cloud server to download recorded data
+- make a recording device that is cheap and easy to setup and maintain
+
 ## software
 
 For the Rpi:
-- NOOBs or Debian Jessie/Wheezy TODO: link to image of everything configured
-- [SoX](http://sox.sourceforge.net/) to convert audio. Recommend installing via Homebrew (`brew install sox`)
-- 
+- Image of RPi_sensing (TODO: make and post image of pi with everything configured proper) 
 
 For the computer:
 - Python 2.*
@@ -21,8 +25,9 @@ For the computer:
 
 You will need:
 - Raspberry Pi 3
-- [USB Audio Adapter](TODO:add link)
+- [Sabrent USB Audio Adapter](https://www.google.com/shopping/product/2306321428961959764?lsf=seller:6136318,store:15060907829491788201&prds=oid:7203634167783694949&q=usb+audio+adapter+sabrent+robotshop&hl=en&ei=m95mWrKnLcXQjwPul4DoAg&lsft=gclid:Cj0KCQiAtJbTBRDkARIsAIA0a5MivhP0sNqjmVP4I1P3m8pjSyolc1Mo8ve7HlB34PsM0rWNyHSgObgaAirHEALw_wcB)
 - [Electret microphone](https://www.adafruit.com/product/1064) (TODO: part number)
+- Wireless dongle w/ removable 5dB antennae (optional) (enhancement) (larger range) (TODO: link)
 - microSD card (ours is 8GB)
 - USB --> MicroUSB cable for connecting RPi to power
 - 120VAC-->USB 5V 1.5A wall adapter
@@ -68,6 +73,16 @@ To work in your virtualenv, run the command `workon sensing`. To leave, run `dea
 Slack
 - Hackathon: Sensing the Environment
 - Workspace URL: sensingtheenvironment.slack.com 
+
+## building from source
+- download latest version of NOOBs or Debian Jessie/Wheezy 
+- update software 
+- configure keyboard, locale, and timezone as US.
+- clone this repo 
+- run python script as a bash script on startup
+- follow [raspberry pi audio setup](http://www.g7smy.co.uk/2013/08/recording-sound-on-the-raspberry-pi/) to make sure you can record with your setup
+
+
 
 ## references
 - [microphone jack schematic](https://electronics.stackexchange.com/questions/307430/confusion-about-trrs-jack-and-mic-input)
