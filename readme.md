@@ -2,14 +2,15 @@
 
 Made for/with the [PNCA Sensing the Environment Project](http://pnca.edu/makethinkcode/news/c/sensing_the_environment).
 
-This is a sound recording and reporting kit. Right now, sound is recorded to an onboard SD card. Stage 0 will send this info over USB Serial to a Python server on a host computer.
+This is a sound recording and reporting kit. Right now, sound is recorded to an onboard SD card. 
+Stage 1 will send this info over Wifi to a Python server on a host computer.
 
 ## software
 
-For the Teensy:
-- [Arduino IDE](https://www.arduino.cc/en/Main/Software) for writing and uploading sketches
-- [Teensyduino](https://www.pjrc.com/teensy/teensyduino.html) for Arduino to work with Teensy boards
+For the Rpi:
+- NOOBs or Debian Jessie/Wheezy TODO: link to image of everything configured
 - [SoX](http://sox.sourceforge.net/) to convert audio. Recommend installing via Homebrew (`brew install sox`)
+- 
 
 For the computer:
 - Python 2.*
@@ -19,13 +20,14 @@ For the computer:
 ## hardware
 
 You will need:
-- Teensy 3.2
-- Teensy Audio Shield (TODO: part number)
-- SparkFun mic (TODO: part number)
+- Raspberry Pi 3
+- [USB Audio Adapter](TODO:add link)
+- [Electret microphone](https://www.adafruit.com/product/1064) (TODO: part number)
 - microSD card (ours is 8GB)
-- USB --> MicroUSB cable for connecting Teensy to computer
-- SD card adaptor so microSD card can be read on computer
-- OPTIONAL: ESP8266 WiFi module
+- USB --> MicroUSB cable for connecting RPi to power
+- 120VAC-->USB 5V 1.5A wall adapter
+- SD card adaptor so microSD card can be flashed with computer
+- OPTIONAL: HDMI cable, HDMI monitor, USB keyboard and mouse for setting up Pi
 
 ## installation
 
@@ -40,7 +42,6 @@ This should install `pyserial` locally in your `sensing` virtual environment.
 
 run `brew install sox` to get SoX on your computer.
 
-You may need to install additional packages in your Arduino environment in order to interface with a Teensy (TODO: document this).
 
 ### virtualenvs
 
@@ -48,10 +49,12 @@ To work in your virtualenv, run the command `workon sensing`. To leave, run `dea
 
 ## project structure
 
-- `/teensy` stores Teensy sketches
-- `/base` will store "base station code"; i.e., the server the sensing unit reports data back to and a basic frontend to confirm that communication is working.
-- `/rawToWav.sh` uses SoX to convert .RAW audio files, as they are saved to the SD card, into .WAV files. Run it via `source rawToWav.sh path/to/file/without/extension`
+- `/teensy` stores Teensy sketches for microcontroller based sensing module (legacy)
+- `/RPi` will store "base station code"; i.e., the client with the microphone sensing unit that reports data back to server and a basic frontend to confirm that communication is working.
+- `/docs` a place to store all documentation for this project 
 
 
-## fun facts
-- our SD card uses [8.3 filenames](https://en.wikipedia.org/wiki/8.3_filename), so all files saved there can have names of max 8 characters, not including directory names or extension. The extension can be a max of 3 characters.
+## references
+- [microphone jack schematic](https://electronics.stackexchange.com/questions/307430/confusion-about-trrs-jack-and-mic-input)
+- [microphone jack pic](https://cdn.instructables.com/ORIG/FHZ/YTV8/GAPUWXXX/FHZYTV8GAPUWXXX.jpg)
+- [raspberry pi audio setup](http://www.g7smy.co.uk/2013/08/recording-sound-on-the-raspberry-pi/)
