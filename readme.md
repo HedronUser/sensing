@@ -31,6 +31,16 @@ You will need:
 
 ## installation
 
+On the raspberry pi, follow the setup on [raspberry pi audio setup](http://www.g7smy.co.uk/2013/08/recording-sound-on-the-raspberry-pi/) 
+
+then test recording with:
+
+arecord -f S16_LE --r=22000 -D plughw:1 --duration=10 -vv ~/rectest11.wav
+
+
+
+
+
 On the host computer, in the project directory, run the following commands to set up your Python environment:
 
 ```
@@ -52,9 +62,24 @@ To work in your virtualenv, run the command `workon sensing`. To leave, run `dea
 - `/teensy` stores Teensy sketches for microcontroller based sensing module (legacy)
 - `/RPi` will store "base station code"; i.e., the client with the microphone sensing unit that reports data back to server and a basic frontend to confirm that communication is working.
 - `/docs` a place to store all documentation for this project 
+- `/enclosure` a place to store all things enclosure related - design files, 
 
+## development
+Slack
+- Hackathon: Sensing the Environment
+- Workspace URL: sensingtheenvironment.slack.com 
 
 ## references
 - [microphone jack schematic](https://electronics.stackexchange.com/questions/307430/confusion-about-trrs-jack-and-mic-input)
 - [microphone jack pic](https://cdn.instructables.com/ORIG/FHZ/YTV8/GAPUWXXX/FHZYTV8GAPUWXXX.jpg)
 - [raspberry pi audio setup](http://www.g7smy.co.uk/2013/08/recording-sound-on-the-raspberry-pi/)
+
+## credits
+Nandini
+Violet Pena
+Trace Harris
+Richard
+Dylan Mcnamee
+Chris Eykamp
+Candace Hazelwood
+Jesse Jenkins
