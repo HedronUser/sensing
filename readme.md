@@ -21,30 +21,58 @@ For the computer:
 - Virtualenv & virtualenvwrapper
 - [pip](https://pip.pypa.io/en/stable/)
 
+## software overview
+
+- a python script takes care of sending files to ftp on a schedule
+- a built-in linux program called arecord takes care of recording data on a schedule
+- witty pi software and hardware takes care of sleep/wake schedules
+
 ## hardware
 
 You will need:
-- Raspberry Pi 3
+- Raspberry Pi 3 or raspberry pi zero..
 - [Sabrent USB Audio Adapter](https://www.google.com/shopping/product/2306321428961959764?lsf=seller:6136318,store:15060907829491788201&prds=oid:7203634167783694949&q=usb+audio+adapter+sabrent+robotshop&hl=en&ei=m95mWrKnLcXQjwPul4DoAg&lsft=gclid:Cj0KCQiAtJbTBRDkARIsAIA0a5MivhP0sNqjmVP4I1P3m8pjSyolc1Mo8ve7HlB34PsM0rWNyHSgObgaAirHEALw_wcB)
 - [Electret microphone](https://www.adafruit.com/product/1064) (TODO: part number)
-- Wireless dongle w/ removable 5dB antennae (optional) (enhancement) (larger range) (TODO: link)
+- Wireless dongle w/ removable 5dB antennae (optional) (enhancement for larger range) (TODO: link)
 - microSD card (ours is 8GB)
-- USB --> MicroUSB cable for connecting RPi to power
+- USB thumb drive (this is where sound data will be stored)
+- USB --> MicroUSB cable for connecting RPi to power (ideally get one with a (waterproof?) power button on it)
 - 120VAC-->USB 5V 1.5A wall adapter
 - SD card adaptor so microSD card can be flashed with computer
-- OPTIONAL: HDMI cable, HDMI monitor, USB keyboard and mouse for setting up Pi
+- OPTIONAL FOR INITIALIZING: HDMI cable, HDMI monitor, USB keyboard and mouse
+- Witty Pi 2 cape for Pi Zero or Pi 3- this board has a Real-time clock which controls pi sleep cycles temperature gauge
 
-## installation
+## hardware overview
+
+An SFTP server installed on an Intel Nuc  will live at Dylan's place  
+
+An SFTP client install on the Rpi lives in the field
+
+## Installation of USB audio device and Arecord
 
 On the raspberry pi, follow the setup on [raspberry pi audio setup](http://www.g7smy.co.uk/2013/08/recording-sound-on-the-raspberry-pi/) 
 
 then test recording with:
 
-arecord -f S16_LE --r=22000 -D plughw:1 --duration=10 -vv ~/rectest11.wav
+arecord -f S16_LE --r=22000 -D plughw:1 --max-file-time 30 --duration=10 -vv ~/rectest11.wav
+ 
+## configuration of pi
+
+the witty pi software uses a script to control when to go to sleep and wake up found in 
+/wittypi/schedules/
+
+edit the etsyhost name to be unique:
+
+1. sudo nano /etc/hosts
 
 
+## configuration of arecord
 
+duration is the maximum length of chunks in seconds
 
+max file time is the ultimate length of recording in seconds
+
+## using a virtual environment
 
 On the host computer, in the project directory, run the following commands to set up your Python environment:
 
@@ -67,7 +95,7 @@ To work in your virtualenv, run the command `workon sensing`. To leave, run `dea
 - `/teensy` stores Teensy sketches for microcontroller based sensing module (legacy)
 - `/RPi` will store "base station code"; i.e., the client with the microphone sensing unit that reports data back to server and a basic frontend to confirm that communication is working.
 - `/docs` a place to store all documentation for this project 
-- `/enclosure` a place to store all things enclosure related - design files, 
+- `/enclosure` a place to store all things enclosure related - design files for 3d printing and laser cutting 
 
 ## development
 Slack
@@ -98,3 +126,7 @@ Dylan Mcnamee
 Chris Eykamp
 Candace Hazelwood
 Jesse Jenkins
+
+## troublehsooting known bugs
+
+- raspberry pi gives error : could not get clock.

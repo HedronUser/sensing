@@ -1,0 +1,7 @@
+dish3.wav - a recording using the electret microphone on the dish pointing away from the dish. - polarity reversed
+dish2_2.wav - a recording using the electret microphone pointing towards the dish as expected - polarity reversed
+dish2.wav - a recording using the electret microphone pointing towards the dish as expected
+pc2.wav - a recording using a pc microphone located in approximately the same space as the dish pointing away from dish.
+pc2_and_dish.wav - a recording using a pc microphone located in same spot as electret microphone pointing towards the dish.
+
+
