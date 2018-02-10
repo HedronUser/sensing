@@ -23,24 +23,35 @@ For the computer:
 
 ## software overview
 
-- a python script takes care of sending files to ftp on a schedule
+- a python script takes care of sending files to ftp server on a schedule
 - a built-in linux program called arecord takes care of recording data on a schedule
+- a shell script takes care of recording intervals and generating Pi-specific (using MAC address) filenames
 - witty pi software and hardware takes care of sleep/wake schedules
 
 ## hardware
 
 You will need:
-- Raspberry Pi 3 or raspberry pi zero..
-- [Sabrent USB Audio Adapter](https://www.google.com/shopping/product/2306321428961959764?lsf=seller:6136318,store:15060907829491788201&prds=oid:7203634167783694949&q=usb+audio+adapter+sabrent+robotshop&hl=en&ei=m95mWrKnLcXQjwPul4DoAg&lsft=gclid:Cj0KCQiAtJbTBRDkARIsAIA0a5MivhP0sNqjmVP4I1P3m8pjSyolc1Mo8ve7HlB34PsM0rWNyHSgObgaAirHEALw_wcB)
-- [Electret microphone](https://www.adafruit.com/product/1064) (TODO: part number)
-- Wireless dongle w/ removable 5dB antennae (optional) (enhancement for larger range) (TODO: link)
-- microSD card (ours is 8GB)
-- USB thumb drive (this is where sound data will be stored)
-- USB --> MicroUSB cable for connecting RPi to power (ideally get one with a (waterproof?) power button on it)
-- 120VAC-->USB 5V 1.5A wall adapter
-- SD card adaptor so microSD card can be flashed with computer
-- OPTIONAL FOR INITIALIZING: HDMI cable, HDMI monitor, USB keyboard and mouse
-- Witty Pi 2 cape for Pi Zero or Pi 3- this board has a Real-time clock which controls pi sleep cycles temperature gauge
+-[Raspberry Pi 3 model B]
+-[Sabrent USB sound card adapter]
+-[Sparkfun Sound Detector or Adafruit Amplifier]
+-[Witty Pi 2 Cape for Rpi]
+-[microSD card (8GB is fine)]
+-[USB thumb drive (128GB)]
+-[Waterproof enclosure ]
+-[small waterproof gland (for microphone) PG7]
+-[medium waterproof gland (for AC power) PG9]
+-[Minimum 2.1A 5VDC power supply]
+-[AC extension cord]
+-[shielded microphone cable ]
+
+Optional accessories :
+-[HDMI cable],
+-[HDMI monitor],
+-[USB keyboard]
+-[USB mouse]
+- [Wireless dongle w/ removable 5dB antennae that works with Pi(optional) (enhancement for larger range)]
+-[Hardware for standoffs]
+-[acrylic sheets for mounting plate (enclosure)]
 
 ## hardware overview
 
@@ -94,6 +105,7 @@ To work in your virtualenv, run the command `workon sensing`. To leave, run `dea
 
 - `/teensy` stores Teensy sketches for microcontroller based sensing module (legacy)
 - `/RPi` will store "base station code"; i.e., the client with the microphone sensing unit that reports data back to server and a basic frontend to confirm that communication is working.
+- `/raspberry_pi` will store "base station code"; i.e., the client with the microphone sensing unit that reports data back to server and a basic frontend to confirm that communication is working.
 - `/docs` a place to store all documentation for this project 
 - `/enclosure` a place to store all things enclosure related - design files for 3d printing and laser cutting 
 
@@ -126,7 +138,8 @@ Dylan Mcnamee
 Chris Eykamp
 Candace Hazelwood
 Jesse Jenkins
+Daniel Tiebel
 
 ## troublehsooting known bugs
 
-- raspberry pi gives error : could not get clock.
+- raspberry pi gives error : could not get clock with witty pi installed
