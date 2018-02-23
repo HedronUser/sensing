@@ -2,13 +2,17 @@ import time
 import paramiko
 import glob
 import os
+from credentials import *
 
 pollingIntervalSeconds = 5
-uploadHost = "fill me in"
-uploadUsername = "tweetyuser"
-uploadPassword = "fill me in"
-uploadDir = 'upload'
-uploadPort = 2222
+# credentials moved
+# these lines, with the good stuff filled in, should be in
+#  credentials.py
+# uploadHost = "fill me in"
+# uploadUsername = "tweetyuser"
+# uploadPassword = "fill me in"
+# uploadDir = 'upload'
+# uploadPort = 2222
 allWavs="*.wav"
 
 previousFiles={}
@@ -29,44 +33,50 @@ previousFiles={}
 #       if it doesn't match, we need to delete the old one TODO
 # and loop
 while True:
-    wavFiles=glob.glob(allWavs)
-    for wavName in wavFiles:
-        wavSize = os.path.getsize(wavName)
-        if wavName in previousFiles:
-            if wavSize == previousFiles[wavName]:
-                print("uploading {}".format(wavName))
-                transport = paramiko.Transport((uploadHost, uploadPort))
-                transport.connect(username=uploadUsername, password=uploadPassword)
-                sftp = paramiko.SFTPClient.from_transport(transport)
-                sftp.chdir(uploadDir)
-                wavFile = open(wavName, 'rb')
-                resp = sftp.put(wavName, wavName)
-                wavFile.close()
-                # TODO: check resp for OK
-                try:
-                    resp = sftp.stat(wavName)
-                    # example:
-                    remoteSize = resp.st_size
-                    if remoteSize == wavSize:
-                        print("successfully uploaded {}, removing local".format(wavName))
-                        del previousFiles[wavName]
-                        os.remove(wavName)
-                    else:
-                        # TODO: we have a problem -- need to delete
-                        # the partial upload.
-                            print("couldn't upload {}, {} != {}".format(
-                                    wavName, remoteSize, wavSize))
-                except FileNotFoundError:
-                    pass
-                # todo - do something better
-                sftp.close()
-                transport.close()
-            else:
-                print("old file {} new size: {}".format(wavName, wavSize))
+    try:
+        wavFiles=glob.glob(allWavs)
+        for wavName in wavFiles:
+            wavSize = os.path.getsize(wavName)
+            if wavName in previousFiles:
+                if wavSize == previousFiles[wavName]:
+                    print("uploading {}".format(wavName))
+                    transport = paramiko.Transport((uploadHost, uploadPort))
+                    transport.connect(username=uploadUsername, password=uploadPassword)
+                    sftp = paramiko.SFTPClient.from_transport(transport)
+                    sftp.chdir(uploadDir)
+                    wavFile = open(wavName, 'rb')
+                    resp = sftp.put(wavName, wavName)
+                    wavFile.close()
+                    # TODO: check resp for OK
+                    try:
+                        resp = sftp.stat(wavName)
+                        # example:
+                        remoteSize = resp.st_size
+                        if remoteSize == wavSize:
+                            print("successfully uploaded {}, removing local".format(wavName))
+                            del previousFiles[wavName]
+                            os.remove(wavName)
+                        else:
+                            # TODO: we have a problem -- need to delete
+                            # the partial upload.
+                                print("couldn't upload {}, {} != {}".format(
+                                        wavName, remoteSize, wavSize))
+                    except FileNotFoundError:
+                        pass
+                    # todo - do something better
+                    sftp.close()
+                    transport.close()
+                else:
+                    print("old file {} new size: {}".format(wavName, wavSize))
+                    previousFiles[wavName] = wavSize
+            else: # if wavName in previousFiles:
+                print("found new file {} size: {}".format(wavName, wavSize))
                 previousFiles[wavName] = wavSize
-        else: # if wavName in previousFiles:
-            print("found new file {} size: {}".format(wavName, wavSize))
-            previousFiles[wavName] = wavSize
 
-    print("done this time, sleeping")
-    time.sleep(pollingIntervalSeconds)
+        print("done this time, sleeping")
+        time.sleep(pollingIntervalSeconds)
+    except Exception as oops:
+        print("network error (timeout?)...sleeping")
+        print(type(oops))
+        print(oops)
+        time.sleep(30)
