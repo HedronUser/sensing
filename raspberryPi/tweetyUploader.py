@@ -17,6 +17,8 @@ allWavs="*.wav"
 
 previousFiles={}
 
+timeout_count = 0
+
 # overall logic:
 # we poll the local filesystem for .wav files
 #   when we find a new one, we store its size in the
@@ -32,6 +34,9 @@ previousFiles={}
 #       if it matches, we delete the local file
 #       if it doesn't match, we need to delete the old one TODO
 # and loop
+# if we encounter an exception, wait a while and try again,
+# if that happens more than 10 times, exit, relying on the surrounding
+# script to restart us.
 while True:
     try:
         wavFiles=glob.glob(allWavs)
@@ -42,7 +47,9 @@ while True:
                     print("uploading {}".format(wavName))
                     transport = paramiko.Transport((uploadHost, uploadPort))
                     transport.connect(username=uploadUsername, password=uploadPassword)
+                    time.sleep(1)
                     sftp = paramiko.SFTPClient.from_transport(transport)
+                    time.sleep(1)
                     sftp.chdir(uploadDir)
                     wavFile = open(wavName, 'rb')
                     resp = sftp.put(wavName, wavName)
@@ -79,4 +86,9 @@ while True:
         print("network error (timeout?)...sleeping")
         print(type(oops))
         print(oops)
+        timeout_count = timeout_count + 1
+        if timeout_count > 10:
+            print("exiting due to 10 errors")
+            sys.exit(0)
         time.sleep(30)
+        previousFiles={}
