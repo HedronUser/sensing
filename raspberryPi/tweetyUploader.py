@@ -2,6 +2,7 @@ import time
 import paramiko
 import glob
 import os
+import sys
 from credentials import *
 
 pollingIntervalSeconds = 5
