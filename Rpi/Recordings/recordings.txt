@@ -1,0 +1,25 @@
+02-06-2018 - Notes
+
+dish3.wav - a recording using the electret microphone mounted on the dish pointing away from the dish (this should mitigate the affect of the dish - polarity reversed
+
+dish2_2.wav - a recording using the electret microphone pointing towards the dish as expected (this should use the geometry dish for amplification - polarity reversed
+
+dish2.wav - a recording using the electret microphone pointing towards the dish as expected
+
+pc2.wav - a recording using a pc microphone located in approximately the same space as the dish pointing away from dish.
+
+pc2_and_dish.wav - a recording using a pc microphone located in same spot as electret microphone pointing towards the dish.
+
+Note about the  Volume comparison and Frequency Analysis screenshots.
+
+-I recorded bird songs playing out of my computer from a youtube link
+https://www.youtube.com/watch?v=NK2_bcQcoD4
+
+-There was occasionally some background noise. I tried to not compare parts of the file that included background noise.
+
+-At one point I actually yelled in the microphone. I avoided using this part in the analysis.
+
+Observations: 
+-The parabolic dish affects the frequency range the microphone accepts, mostly it cuts down on the high dB peaks (see screenshots of frequency analysis).
+
+-The parabolic dish affects the overall gain of the microphone very little. If anything it acts as a rain shield.

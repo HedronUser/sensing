@@ -20,6 +20,7 @@ previousFiles={}
 
 timeout_count = 0
 
+
 # overall logic:
 # we poll the local filesystem for .wav files
 #   when we find a new one, we store its size in the
@@ -93,3 +94,4 @@ while True:
             sys.exit(0)
         time.sleep(30)
         previousFiles={}
+
